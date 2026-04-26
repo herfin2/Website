@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-#| Include: FALSE
+#| include: FALSE
 library(tidyverse);
 library(mdsr);
 library(maps);
@@ -21,7 +21,7 @@ library(usdata);
 ```
 
 ```{r}
-#| Include: FALSE
+#| include: FALSE
 states_sf <- 
   read_sf("https://rstudio.github.io/leaflet/json/us-states.geojson") |>
   select(name, geometry)
@@ -33,7 +33,7 @@ states_sf <- states_sf |>
 
 
 ```{r}
-#| Include: FALSE
+#| include: FALSE
 states_map <- state_stats |> 
   mutate(region = tolower(state)) |>
   select(region, unempl, poverty) |>
@@ -47,7 +47,7 @@ int_states_map <- states_sf |>
 ```
 
 ```{r}
-#| Include: FALSE
+#| include: FALSE
 bins <- c(0, 2, 4, 6, 8, 10, 12, Inf)
 pal <- colorBin("YlOrRd", domain = int_states_map, bins = bins)
 
@@ -59,7 +59,7 @@ labels <- lapply(int_states_map$labels, HTML)
 
 State-level graphs showing unemployment levels in 2010 by percentages
 ```{r}
-#| Eval: FALSE
+#| eval: FALSE
 ggplot(states_map, aes(map_id = region)) +
   geom_map(aes(fill = unempl), map = states_map) +
   expand_limits(x = states_map$long, y = states_map$lat) +
@@ -69,7 +69,7 @@ ggplot(states_map, aes(map_id = region)) +
 ```
 Data aquired from the usdata package
 ```{r}
-#| Eval: FALSE
+#| eval: FALSE
 leaflet(int_states_map) |>
   setView(-96, 37.8, 4) |>
   addTiles() |>
@@ -99,7 +99,7 @@ Data aquired from the usdata package
 From these graphs we can see that there is a national average of around 4-8% unemployed with some notable outliers California, Nevada, and Rhode island all with unemployment over 10%. 
 
 ```{r}
-#| Include: FALSE
+#| include: FALSE
 bins <- c(0, 4, 8, 12, 16, 20, Inf)
 pal <- colorBin("YlOrRd", domain = int_states_map, bins = bins)
 
@@ -113,7 +113,7 @@ Interestingly, this does not correlate with national poverty levels. Nevada and 
 
 State-level graphs showing poverty levels in 2010 by percentages
 ```{r}
-#| Eval: FALSE
+#| eval: FALSE
 ggplot(states_map, aes(map_id = region)) +
   geom_map(aes(fill = poverty), map = states_map) +
   expand_limits(x = states_map$long, y = states_map$lat) +
@@ -123,7 +123,7 @@ ggplot(states_map, aes(map_id = region)) +
 ```
 Data aquired from the usdata package
 ```{r}
-#| Eval: FALSE
+#| eval: FALSE
 leaflet(int_states_map) |>
   setView(-96, 37.8, 4) |>
   addTiles() |>
