@@ -59,7 +59,7 @@ labels <- lapply(int_states_map$labels, HTML)
 
 State-level graphs showing unemployment levels in 2010 by percentages
 ```{r}
-#| eval: FALSE
+#| echo: FALSE
 ggplot(states_map, aes(map_id = region)) +
   geom_map(aes(fill = unempl), map = states_map) +
   expand_limits(x = states_map$long, y = states_map$lat) +
@@ -69,7 +69,7 @@ ggplot(states_map, aes(map_id = region)) +
 ```
 Data aquired from the usdata package
 ```{r}
-#| eval: FALSE
+#| echo: FALSE
 leaflet(int_states_map) |>
   setView(-96, 37.8, 4) |>
   addTiles() |>
@@ -113,7 +113,7 @@ Interestingly, this does not correlate with national poverty levels. Nevada and 
 
 State-level graphs showing poverty levels in 2010 by percentages
 ```{r}
-#| eval: FALSE
+#| echo: FALSE
 ggplot(states_map, aes(map_id = region)) +
   geom_map(aes(fill = poverty), map = states_map) +
   expand_limits(x = states_map$long, y = states_map$lat) +
@@ -123,7 +123,7 @@ ggplot(states_map, aes(map_id = region)) +
 ```
 Data aquired from the usdata package
 ```{r}
-#| eval: FALSE
+#| echo: FALSE
 leaflet(int_states_map) |>
   setView(-96, 37.8, 4) |>
   addTiles() |>
