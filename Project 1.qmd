@@ -1,10 +1,11 @@
 ---
 title: "Project 1"
 format: html
+code-fold: true
 ---
 
 ```{r}
-#| include: FALSE
+#| output: FALSE
 library(tidyverse);
 library(RTextTools);
 library(tidytext);
@@ -22,13 +23,12 @@ as_tibble(NYTimes);
 The NYTimes dataset contains text of all the titles for articles from 1996 - 2006. I want to look at how the sentiment, topics, and word choice changes over the years.
 
 ```{r}
-#| include: FALSE
+#| output: FALSE
 months <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 ```
 
 
 ```{r}
-#| echo: false
 # Bing sentiments for titles separated by month
 NYTimes |>
   mutate (
@@ -59,13 +59,12 @@ NYTimes |>
 Most months have an overall negative sentiment score (greater than %50). There are varying number of articles per month so some months only have a few data points while others have a lot more. Some notable points are May 1997, February 1998, November 2002 and 2003 all of which have 100% negative sentiment. These coincide with natural disasters and terrorist attacks being the only reported on news in the data base.
 
 ```{r}
-#| include: FALSE
+#| output: FALSE
 codes <- c("Macroeconomics", "Civil Rights", "Health", "Agriculture", "Labor, Immigration, and Employment", "Education", "Environment", "Energy", "Immigration", "Transportation", "", "Law", "Social Welfare", "Community Development and Housing", "Finance", "Defense", "Science", "Foreign Trade", "International Affairs", "Federal Government", "Public Lands and Water Management", "", "Arts and Entertainment", "State and Local Government Administration", "", "Weather and Natural Disasters", "Fires", "", "Sports and Recreation", "Death Notices", "Churches and Religion", "Other, Miscellaneous, and Human Interest")
 ```
 
 
 ```{r}
-#| echo: false
 # Top four topics for each year
 NYTimes |>
   mutate(
@@ -94,7 +93,6 @@ NYTimes |>
 The most common topics change over the years. Up until 2001 the Federal Government was a large part of the news while Defense was a much smaller part. After and during 2001 Defense because a much larger part of the news. This coincides with 9/11 and the war in Iraq. The dataset ends at 2006 which is still during the war in Iraq so Defense is still a large part of the news. International Affairs has always been a large part of the news which makes sense as the NYT is not a solely domestic news source.
 
 ```{r, fig.width=10,fig.height=7}
-#| echo: false
 # Top 10 most common words for each year
 NYTimes |>
   mutate (

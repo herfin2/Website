@@ -7,6 +7,3 @@ about:
 
 Hello! I am a senior chemistry major who enjoys learning new things and problem solving. 
 
-```{r}
-1 + 1
-```
