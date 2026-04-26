@@ -1,10 +1,11 @@
 ---
-title: "Website"
+title: "Anders Herfindahl-Quint"
+about:
+  template: jolla
+  image: media/headshot.jpg
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Hello! I am a senior chemistry major who enjoys learning new things and problem solving. 
 
 ```{r}
 1 + 1
