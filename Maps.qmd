@@ -1,0 +1,151 @@
+---
+title: "Maps"
+format: html
+---
+
+```{r}
+#| Include: FALSE
+library(tidyverse);
+library(mdsr);
+library(maps);
+library(viridis);
+library(lubridate);
+library(statebins);
+library(leaflet);
+library(sf);
+library(htmltools);
+library(glue);
+library(rvest);
+library(polite);
+library(usdata);
+```
+
+```{r}
+#| Include: FALSE
+states_sf <- 
+  read_sf("https://rstudio.github.io/leaflet/json/us-states.geojson") |>
+  select(name, geometry)
+
+states_sf <- states_sf |>
+  mutate(name = str_to_lower(str_squish(name))) |>
+  filter(!(str_detect(name, "alaska|hawaii")))
+```
+
+
+```{r}
+#| Include: FALSE
+states_map <- state_stats |> 
+  mutate(region = tolower(state)) |>
+  select(region, unempl, poverty) |>
+  inner_join(map_data("state"))
+
+int_states_map <- states_sf |> 
+  inner_join(state_stats |> 
+    mutate(region = tolower(state)) |>
+    select(region, unempl, poverty),
+  by =c("name" = "region"))
+```
+
+```{r}
+#| Include: FALSE
+bins <- c(0, 2, 4, 6, 8, 10, 12, Inf)
+pal <- colorBin("YlOrRd", domain = int_states_map, bins = bins)
+
+int_states_map <- int_states_map |>
+  mutate(labels = str_c(name, ": ", unempl, " % Unemployed"))
+
+labels <- lapply(int_states_map$labels, HTML)
+```
+
+State-level graphs showing unemployment levels in 2010 by percentages
+```{r}
+#| Eval: FALSE
+ggplot(states_map, aes(map_id = region)) +
+  geom_map(aes(fill = unempl), map = states_map) +
+  expand_limits(x = states_map$long, y = states_map$lat) +
+  scale_fill_viridis_c() +
+  theme_void() +
+  labs(x = "", y = "", fill = "Unemployment (%)")
+```
+Data aquired from the usdata package
+```{r}
+#| Eval: FALSE
+leaflet(int_states_map) |>
+  setView(-96, 37.8, 4) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal(unempl),
+    weight = 3,
+    opacity = 1,
+    color = "white",
+    dashArray = "4",
+    fillOpacity = 0.7,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#000",
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = labels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "bold", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) |>
+  addLegend(pal = pal, values = ~unempl, opacity = 0.7, title = NULL,
+    position = "bottomright")
+```
+Data aquired from the usdata package
+
+From these graphs we can see that there is a national average of around 4-8% unemployed with some notable outliers California, Nevada, and Rhode island all with unemployment over 10%. 
+
+```{r}
+#| Include: FALSE
+bins <- c(0, 4, 8, 12, 16, 20, Inf)
+pal <- colorBin("YlOrRd", domain = int_states_map, bins = bins)
+
+int_states_map <- int_states_map |>
+  mutate(labels = str_c(name, ": ", poverty, " % under the poverty line"))
+
+labels <- lapply(int_states_map$labels, HTML)
+```
+
+Interestingly, this does not correlate with national poverty levels. Nevada and California are average in national poverty while Mississippi is a significant outlier despite have an around average unemployment rate. 
+
+State-level graphs showing poverty levels in 2010 by percentages
+```{r}
+#| Eval: FALSE
+ggplot(states_map, aes(map_id = region)) +
+  geom_map(aes(fill = poverty), map = states_map) +
+  expand_limits(x = states_map$long, y = states_map$lat) +
+  scale_fill_viridis_c() +
+  theme_void() +
+  labs(x = "", y = "", fill = "Poverty (%)")
+```
+Data aquired from the usdata package
+```{r}
+#| Eval: FALSE
+leaflet(int_states_map) |>
+  setView(-96, 37.8, 4) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal(poverty),
+    weight = 3,
+    opacity = 1,
+    color = "white",
+    dashArray = "4",
+    fillOpacity = 0.7,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#000",
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = labels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "bold", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) |>
+  addLegend(pal = pal, values = ~poverty, opacity = 0.7, title = NULL,
+    position = "bottomright")
+```
+Data aquired from the usdata package
